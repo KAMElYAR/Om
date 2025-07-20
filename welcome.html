@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="6;url=index.html">
+  <title>Welcome with Snow</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: 'Arial Black', sans-serif;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      position: relative;
+      width: 400px;
+      height: 200px;
+      z-index: 2;
+    }
+    .letter {
+      position: absolute;
+      font-size: 48px;
+      font-weight: bold;
+      background: linear-gradient(45deg, #7AD2F7, #FF85B3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      user-select: none;
+      cursor: default;
+      will-change: transform, left, top;
+    }
+
+    /* Snow styles */
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: white;
+      font-size: 10px;
+      z-index: 1;
+      user-select: none;
+      pointer-events: none;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="container"></div>
+
+  <script>
+    const word = 'welcome';
+    const copies = 5;
+    const container = document.getElementById('container');
+
+    const containerWidth = 400;
+    const containerHeight = 200;
+
+    const letterSpacing = 50;
+    const finalPositions = [];
+
+    const startX = (containerWidth - letterSpacing * (word.length - 1)) / 2;
+    const centerY = containerHeight / 2 + 10;
+
+    for(let i=0; i<word.length; i++) {
+      finalPositions.push({
+        x: startX + i * letterSpacing,
+        y: centerY,
+        rotate: 0
+      });
+    }
+
+    const letters = [];
+
+    function randomRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function createLetters() {
+      for (let i = 0; i < word.length; i++) {
+        const char = word[i];
+        for (let j = 0; j < copies; j++) {
+          const span = document.createElement('span');
+          span.className = 'letter';
+          span.textContent = char;
+
+          const startX = randomRange(-150, 550);
+          const startY = randomRange(-150, 350);
+
+          span.style.left = startX + 'px';
+          span.style.top = startY + 'px';
+          span.style.transform = `rotate(${randomRange(-180,180)}deg) scale(${randomRange(0.8,1.2)})`;
+
+          container.appendChild(span);
+
+          letters.push({
+            el: span,
+            start: {x: startX, y: startY, rotate: randomRange(-180,180), scale: randomRange(0.8,1.2)},
+            final: finalPositions[i]
+          });
+        }
+      }
+    }
+
+    function easeInOut(t) {
+      return t<0.5 ? 2*t*t : -1+(4-2*t)*t;
+    }
+
+    function animate() {
+      const totalDuration = 5000;
+      let startTime = performance.now();
+      let removed = false;
+
+      function step(time) {
+        let elapsed = time - startTime;
+        let t = Math.min(elapsed / totalDuration, 1);
+        let easedT = easeInOut(t);
+
+        letters.forEach(({el, start, final}, i) => {
+          const centerX = containerWidth / 2;
+          const centerY = containerHeight / 2;
+
+          let pathX, pathY;
+
+          if(t < 0.8){
+            const factor = t/0.8;
+            pathX = start.x + (centerX - start.x)*factor + 100 * Math.sin(factor * Math.PI * 6 + i);
+            pathY = start.y + (centerY - start.y)*factor + 80 * Math.cos(factor * Math.PI * 6 + i);
+          } else {
+            const factor = (t - 0.8)/0.2;
+            const currX = start.x + (centerX - start.x)*0.8 + 100 * Math.sin(0.8 * Math.PI * 6 + i);
+            const currY = start.y + (centerY - start.y)*0.8 + 80 * Math.cos(0.8 * Math.PI * 6 + i);
+
+            pathX = currX + (final.x - currX)*factor;
+            pathY = currY + (final.y - currY)*factor;
+          }
+
+          const rotate = start.rotate + (final.rotate - start.rotate) * easedT;
+          const scale = start.scale + (1 - start.scale) * easedT;
+
+          el.style.left = pathX + 'px';
+          el.style.top = pathY + 'px';
+          el.style.transform = `rotate(${rotate}deg) scale(${scale})`;
+        });
+
+        if (!removed && elapsed > totalDuration - 10) {
+          removed = true;
+          for (let i = letters.length - 1; i >= 0; i--) {
+            if ((i + 1) % copies !== 1) {
+              const {el} = letters[i];
+              el.remove();
+              letters.splice(i, 1);
+            }
+          }
+        }
+
+        if (t < 1) {
+          requestAnimationFrame(step);
+        }
+      }
+
+      requestAnimationFrame(step);
+    }
+
+    createLetters();
+    animate();
+
+    // Snow Effect
+    function createSnowflake() {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      snowflake.textContent = '.';
+      snowflake.style.left = Math.random() * window.innerWidth + 'px';
+      snowflake.style.fontSize = (Math.random() * 8 + 4) + 'px';
+      snowflake.style.animationDuration = (Math.random() * 1 + 0.8) + 's';
+      document.body.appendChild(snowflake);
+
+      setTimeout(() => {
+        snowflake.remove();
+      }, 2000);
+    }
+
+    setInterval(createSnowflake, 6); // بارش سریع‌تر
+  </script>
+</body>
+</html>
