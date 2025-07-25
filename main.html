@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kamiyar | Digital Card</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/a2e0bdfb62.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: linear-gradient(to right, #141e30, #243b55);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #fff;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      width: 400px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+    .profile {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 30px;
+      border-radius: 50%;
+      border: 3px solid #60a5fa;
+      overflow: hidden;
+      box-shadow: 0 0 15px #4ade80;
+    }
+    .profile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .profile:hover img {
+      transform: scale(1.05) rotate(2deg);
+      filter: drop-shadow(0 0 8px #60a5fa);
+    }
+
+    .rainbow-name {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .rainbow-name span {
+      opacity: 0;
+      animation: popIn 0.6s ease-out forwards, colorLoop 5s linear infinite, pulseWiggle 2s ease-in-out infinite;
+    }
+    .rainbow-name span:nth-child(1) { animation-delay: 1.4s; color: #ff4d4d; }
+    .rainbow-name span:nth-child(2) { animation-delay: 1.6s; color: #ff9900; }
+    .rainbow-name span:nth-child(3) { animation-delay: 1.8s; color: #ffee00; }
+    .rainbow-name span:nth-child(4) { animation-delay: 2.0s; color: #33cc33; }
+    .rainbow-name span:nth-child(5) { animation-delay: 2.2s; color: #33cccc; }
+    .rainbow-name span:nth-child(6) { animation-delay: 2.4s; color: #3366ff; }
+    .rainbow-name span:nth-child(7) { animation-delay: 2.6s; color: #cc33ff; }
+
+    @keyframes popIn {
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    @keyframes pulseWiggle {
+      0%, 100% {
+        transform: scale(1) rotate(0deg);
+      }
+      25% {
+        transform: scale(1.03) rotate(1deg);
+      }
+      50% {
+        transform: scale(0.97) rotate(-1deg);
+      }
+      75% {
+        transform: scale(1.02) rotate(0.5deg);
+      }
+    }
+    @keyframes colorLoop {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #aaa;
+      margin-bottom: 25px;
+    }
+    .contact a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 12px 0;
+      text-decoration: none;
+      font-size: 15px;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      color: #fff;
+      background-size: 200%;
+      animation: pulse 2s infinite;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .contact a i {
+      font-size: 16px;
+      transition: transform 0.3s ease;
+    }
+    .contact a.phone {
+      background: linear-gradient(90deg, #22c55e, #4ade80, #22c55e);
+    }
+    .contact a.instagram {
+      background: linear-gradient(45deg, #feda75, #d62976, #962fbf);
+    }
+    .contact a.telegram {
+      background: linear-gradient(45deg, #229ed9, #0088cc, #229ed9);
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 5px rgba(255,255,255,0.3); }
+      50% { box-shadow: 0 0 15px rgba(255,255,255,0.5); }
+      100% { box-shadow: 0 0 5px rgba(255,255,255,0.3); }
+    }
+    .contact a:hover {
+      background-position: right center;
+      transform: scale(1.05);
+    }
+    .contact a:hover i {
+      transform: rotate(20deg) scale(1.2);
+    }
+    footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="profile">
+      <img src="https://i.imgur.com/wSV8Jk8_d.webp" alt="Kamiyar Avatar" />
+    </div>
+
+    <h1 class="rainbow-name">
+      <span>K</span>
+      <span>a</span>
+      <span>m</span>
+      <span>i</span>
+      <span>y</span>
+      <span>a</span>
+      <span>r</span>
+    </h1>
+
+    <p class="subtitle">Creative Programmer</p>
+
+    <div class="contact">
+      <a href="tel:+989399743277" class="phone">
+        <i class="fas fa-phone-alt"></i> +98 939 974 3277
+      </a>
+      <a href="instagram://user?username=farahani_530" class="instagram">
+        <i class="fab fa-instagram"></i> @Farahani_530
+      </a>
+      <a href="tg://resolve?domain=kameiyar" class="telegram">
+        <i class="fab fa-telegram-plane"></i> @kameiyar
+      </a>
+    </div>
+
+    <footer>? 2025 Kamiyar. All rights reserved.</footer>
+  </main>
+
+  <script>
+    const clickSound = new Audio('https://cdn.pixabay.com/download/audio/2022/03/03/audio_c497f1c88b.mp3?filename=tap-6960.mp3');
+    clickSound.volume = 0.3;
+
+    const contactLinks = document.querySelectorAll('.contact a');
+
+    contactLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        clickSound.currentTime = 0;
+        clickSound.play();
+      });
+    });
+  </script>
+</body>
+</html>

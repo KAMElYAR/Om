@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Welcome Animation</title>
+<style>
+  /* Reset */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  html, body {
+    height: 100%; overflow: hidden; background: #000;
+    display: flex; justify-content: center; align-items: center;
+    font-family: 'Arial Black', Gadget, sans-serif;
+    user-select: none;
+  }
+
+  #snow {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  #container {
+    position: relative;
+    width: 600px; height: 200px;
+  }
+
+  .letter {
+    position: absolute;
+    font-weight: 900;
+    font-size: 80px;
+    color: transparent;
+    background: linear-gradient(45deg, #56ccf2, #ff7bd8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    user-select: none;
+    opacity: 1;
+    transition: all 0.8s ease-in-out;
+  }
+
+  .final-letter {
+    font-size: 90px;
+    opacity: 0;
+    background: linear-gradient(45deg, #56ccf2, #ff7bd8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    user-select: none;
+    position: absolute;
+    left: 0; top: 0;
+    transition: opacity 0.6s ease-in;
+    
+  }
+
+</style>
+</head>
+<body>
+
+<div id="container"></div>
+<canvas id="snow"></canvas>
+
+<script>
+  const letters = ['W','E','L','C','O','M','E'];
+  const container = document.getElementById('container');
+  const letterCount = 5; 
+  let allLetters = [];
+  const finalLetters = [];
+
+  container
+  const finalPositions = [
+    {x: 0, y: 60},   // W
+    {x: 75, y: 60},  // E
+    {x: 120, y: 60}, // L
+    {x: 160, y: 60}, // C
+    {x: 210, y: 60}, // O
+    {x: 260, y: 60}, // M
+    {x: 330, y: 60}  // E
+  ];
+
+  for(let i=0; i<letters.length; i++) {
+    for(let j=0; j<letterCount; j++) {
+      const span = document.createElement('span');
+      span.classList.add('letter');
+      span.textContent = letters[i];
+
+      
+      span.style.left = (Math.random()*600) + 'px';
+      span.style.top = (Math.random()*200) + 'px';
+      span.style.transform = `rotate(${(Math.random()*360)-180}deg)`;
+
+      container.appendChild(span);
+      allLetters.push({el: span, letterIndex: i});
+    }
+
+   
+    const finalSpan = document.createElement('span');
+    finalSpan.classList.add('final-letter');
+    finalSpan.textContent = letters[i];
+    finalSpan.style.left = finalPositions[i].x + 'px';
+    finalSpan.style.top = finalPositions[i].y + 'px';
+    container.appendChild(finalSpan);
+    finalLetters.push(finalSpan);
+  }
+
+  const durationScatter = 2000; // 
+  const durationSettle = 4000;  //
+
+  allLetters.forEach(({el, letterIndex}, i) => {
+    function scatterMove() {
+      const newX = Math.random()*600;
+      const newY = Math.random()*200;
+      const newRot = (Math.random()*360)-180;
+      el.style.left = newX + 'px';
+      el.style.top = newY + 'px';
+      el.style.transform = `rotate(${newRot}deg)`;
+    }
+    scatterMove();
+    let scatterInterval = setInterval(scatterMove, 800);
+
+    setTimeout(() => {
+      clearInterval(scatterInterval);
+      el.style.transition = `all ${durationSettle}ms ease-in-out`;
+      el.style.left = finalPositions[letterIndex].x + 'px';
+      el.style.top = finalPositions[letterIndex].y + 'px';
+      el.style.transform = 'rotate(0deg)';
+    }, durationScatter);
+  });
+
+  setTimeout(() => {
+    for(let i=0; i<allLetters.length; i+=letterCount) {
+      for(let j=1; j<letterCount; j++) {
+        allLetters[i+j].el.remove();
+      }
+    }
+  }, durationScatter + durationSettle - 100);
+
+  setTimeout(() => {
+    allLetters.forEach(({el}) => el.remove());
+    finalLetters.forEach(fletter => {
+      fletter.style.opacity = '1';
+    });
+    
+    window.location.href = 'main.html';
+  }, durationScatter + durationSettle);
+
+  const canvas = document.getElementById('snow');
+  const ctx = canvas.getContext('2d');
+  let width, height;
+  let snowflakes = [];
+
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function createSnowflakes() {
+    snowflakes = [];
+    for(let i=0; i<300; i++) {
+      snowflakes.push({
+        x: Math.random()*width,
+        y: Math.random()*height,
+        radius: Math.random()*1.5 + 0.5,
+        speed: Math.random()*3 + 4, 
+        opacity: Math.random()*0.8 + 0.2
+      });
+    }
+  }
+  createSnowflakes();
+
+  function updateSnow() {
+    ctx.clearRect(0,0,width,height);
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    for(let flake of snowflakes) {
+      ctx.moveTo(flake.x, flake.y);
+      ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI*2);
+      flake.y += flake.speed;
+      if(flake.y > height) flake.y = 0;
+    }
+    ctx.fill();
+    requestAnimationFrame(updateSnow);
+  }
+  updateSnow();
+
+</script>
+
+</body>
+</html>
